@@ -29,4 +29,4 @@ QMFreeze doesn't have a user interface or any configuration options. It is alway
 If you need assistance with QMFreeze, you can:
 
 - Join VRCQMG Discord server: [https://discord.gg/bRjZB28z](https://discord.gg/bRjZB28z)
-- Contact EdenFails#1383 on Discord.
+- Contact @edenfails on Discord.
