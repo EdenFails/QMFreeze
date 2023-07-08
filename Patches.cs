@@ -1,8 +1,10 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Reflection;
+using Il2CppSystem;
 using MelonLoader;
 using UnityEngine;
 using VRC.SDKBase;
+using VRCSDK2;
 
 namespace Patches
 {
@@ -24,33 +26,41 @@ namespace Patches
         }
 
         public static Vector3 _origionalGravity, _originalVelocity;
-        public static bool isfrozen, QMFreeze = false;
+        public static bool isfrozen, QMFreeze, AlreadyImmobolized = false;
         private static void OnMenuOpened()
         {
-
-            if (QMFreeze)
+            //MelonLogger.Msg("Opened"); // Debug
+            if (VRCPlayer.field_Internal_Static_VRCPlayer_0 != null)
             {
-                VRCPlayer.field_Internal_Static_VRCPlayer_0.prop_VRCPlayerApi_0.Immobilize(true);
-                _origionalGravity = Physics.gravity;
-                _originalVelocity = Networking.LocalPlayer.GetVelocity();
+                if(Physics.gravity != Vector3.zero)
+                {
+                    _origionalGravity = Physics.gravity;
+                    _originalVelocity = Networking.LocalPlayer.GetVelocity();
+                }
                 Physics.gravity = Vector3.zero;
                 Networking.LocalPlayer.SetVelocity(Vector3.zero);
                 isfrozen = true;
+
             }
+            //MelonLogger.Msg("InnerEndOpened Gravity = " + Physics.gravity.x + Physics.gravity.y + Physics.gravity.z + " OgGravity = " + _origionalGravity.x + _origionalGravity.y + _origionalGravity.z); //-- Used For Debugging 
         }
+
         private static void OnMenuClosed()
         {
+            //MelonLogger.Msg("ClosedMenu"); // Debug
+            if (VRCPlayer.field_Internal_Static_VRCPlayer_0 != null)
+                if (isfrozen)
+                {
+                    //if (AlreadyImmobolized)
+                    //{
+                    //    VRCPlayer.field_Internal_Static_VRCPlayer_0.prop_VRCPlayerApi_0.Immobilize(false);
+                    //}
+                    Physics.gravity = _origionalGravity;
+                    //Networking.LocalPlayer.SetVelocity(_originalVelocity);
+                    isfrozen = false;
+                    //MelonLogger.Msg("InnerEnd CLOSED Gravity = " + Physics.gravity.x + Physics.gravity.y + Physics.gravity.z + " OgGravity = " + _origionalGravity.x + _origionalGravity.y + _origionalGravity.z); //-- Used For Debugging 
 
-            if (isfrozen)
-            {
-                Physics.gravity = _origionalGravity;
-                VRCPlayer.field_Internal_Static_VRCPlayer_0.prop_VRCPlayerApi_0.Immobilize(false);
-                //Networking.LocalPlayer.SetVelocity(_originalVelocity);
-                isfrozen = false;
-            }
+                }
         }
-
     }
-    
 }
-
