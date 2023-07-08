@@ -58,7 +58,7 @@ namespace Helix
             }
             //MelonLogger.Msg("Player Exists!");//Debugging
             PatchBS._origionalGravity = Physics.gravity;
-            PatchBS._originalVelocity = Networking.LocalPlayer.GetVelocity();
+            
             yield break;
         }
     } 
